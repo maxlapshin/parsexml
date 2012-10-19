@@ -8,9 +8,9 @@ parse1_test() ->
   parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html></html>\n">>)).
 
 
-% parse1_test() ->
-%   ?assertEqual({<<"html">>, [{<<"xmlns">>,<<"w3c">>}], []}, 
-%   parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"w3c\"><html>\n">>)).
+parse2_test() ->
+  ?assertEqual({<<"html">>, [{<<"xmlns">>,<<"w3c">>}], []}, 
+  parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"w3c\"></html>\n">>)).
 
 
 
