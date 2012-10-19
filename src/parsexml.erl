@@ -35,6 +35,12 @@ parse(<<" ", Bin/binary>>, [tag_name|State], Acc) ->
 parse(<<">", Bin/binary>>, [tag_attr_list|State], [Attrs, Tag|Acc]) ->
   parse(Bin, [tag|State], [[],lists:reverse(Attrs),Tag|Acc]);
 
+parse(<<"/>", Bin/binary>>, [tag_attr_list,tag|State], [Attrs,Tag,Acc1|Acc]) ->
+  parse(Bin, [tag|State], [[{Tag,lists:reverse(Attrs),[]}|Acc1]|Acc]);
+
+parse(<<" ",Bin/binary>>, [tag_attr_list|_]=State, Acc) ->
+  parse(Bin, State, Acc);
+
 parse(<<C:1/binary,Bin/binary>>, [tag_attr_list|_]=State, Acc) ->
   parse(Bin, [tag_attr|State], [C|Acc]);
 
@@ -49,6 +55,9 @@ parse(<<"\"", Bin/binary>>, [tag_attr_value|State], [Value, Key, List|Acc]) ->
 
 parse(<<C, Bin/binary>>, [tag_attr_value|_]=State, [Value|Acc]) ->
   parse(Bin, State, [<<Value/binary,C>>|Acc]);
+
+parse(<<"/>", Bin/binary>>, [tag_name,tag|State], [Tag,Acc1|Acc]) ->
+  parse(Bin, [tag|State], [[{Tag,[],[]}|Acc1]|Acc]);
 
 parse(<<">", Bin/binary>>, [tag_name|State], Acc) ->
   parse(Bin, [tag|State], [[],[]|Acc]);
