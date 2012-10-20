@@ -3,10 +3,13 @@
 -mode(compile).
 
 main([Path]) ->
+  main([Path, "100"]);
+
+main([Path, Count_]) ->
+  Count = list_to_integer(Count_),
   {ok,Bin} = file:read_file(Path),
   List = binary_to_list(Bin),
   code:add_pathz("ebin"),
-  Count = 100,
   Self = self(),
   T0 = erlang:now(),
   spawn(fun() -> loop_parsexml(Bin, Count), 
