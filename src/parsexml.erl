@@ -5,18 +5,18 @@
 
 
 parse(Bin) when is_binary(Bin) ->
-  [Tag] = parse(Bin, [decl], [[]]),
+  [Tag] = parse(Bin, [tag], [[]]),
   Tag.
 
 
-parse(<<"<?xml ", Bin/binary>>, [decl], Acc) ->
-  parse(Bin, [decl_close], Acc);
+parse(<<"<?xml ", Bin/binary>>, [tag] = State, Acc) ->
+  parse(Bin, [decl|State], Acc);
 
-parse(<<"?>", Bin/binary>>, [decl_close], Acc) ->
-  parse(Bin, [tag], Acc);
+parse(<<"?>", Bin/binary>>, [decl|State], Acc) ->
+  parse(Bin, State, Acc);
 
-parse(<<_, Bin/binary>>, [decl_close], Acc) ->
-  parse(Bin, [decl_close], Acc);
+parse(<<_, Bin/binary>>, [decl|_] = State, Acc) ->
+  parse(Bin, State, Acc);
 
 
 
@@ -60,8 +60,8 @@ parse(<<" ",Bin/binary>>, [tag_attr_list|_]=State, Acc) ->
 parse(<<C:1/binary,Bin/binary>>, [tag_attr_list|_]=State, Acc) ->
   parse(Bin, [tag_attr|State], [C|Acc]);
 
-parse(<<"=\"",Bin/binary>>, [tag_attr|State], [Key,List|Acc]) ->
-  [Value, Rest] = binary:split(Bin, <<"\"">>),
+parse(<<"=", Quote:1/binary ,Bin/binary>>, [tag_attr|State], [Key,List|Acc]) ->
+  [Value, Rest] = binary:split(Bin, Quote),
   parse(Rest, State, [[{Key,Value}|List]|Acc]);
   % parse(Bin, [tag_attr_value|State], [<<>>|Acc]);
 

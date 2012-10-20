@@ -5,14 +5,18 @@
 
 parse_test_() -> 
   [
-  ?_assertEqual({<<"html">>, [], []}, 
+  ?_assertEqual({<<"html">>, [], []},
     parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html></html>\n">>))
+  ,?_assertEqual({<<"html">>, [], []},
+    parsexml:parse(<<"\n<html></html>\n">>))
   ,?_assertEqual({<<"html">>, [], []},
     parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html ></html>\n">>))
   ,?_assertEqual({<<"html">>, [{<<"xmlns">>,<<"w3c">>}], []}, 
     parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"w3c\"></html>\n">>))
   ,?_assertEqual({<<"html">>, [{<<"xmlns">>,<<"w3c">>}], []}, 
     parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"w3c\" ></html>\n">>))
+  ,?_assertEqual({<<"html">>, [{<<"xmlns">>,<<"w3c">>}], []}, 
+    parsexml:parse(<<"<html xmlns='w3c' />\n">>))
   ,?_assertEqual({<<"html">>, [], []}, 
     parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html/>\n">>))
   ,?_assertEqual({<<"html">>, [], []}, 
