@@ -3,96 +3,76 @@
 -include_lib("eunit/include/eunit.hrl").
 
 
-
 parse(Bin) when is_binary(Bin) ->
-  [Tag] = parse(Bin, [tag], [[]]),
+  Bin1 = skip_declaration(Bin),
+  {Tag, Rest} = tag(Bin1),
+  <<>> = trim(Rest),
   Tag.
 
+skip_declaration(<<"<?xml", Bin/binary>>) ->
+  [_,Rest] = binary:split(Bin, <<"?>">>),
+  trim(Rest);
 
-parse(<<"<?xml ", Bin/binary>>, [tag] = State, Acc) ->
-  parse(Bin, [decl|State], Acc);
-
-parse(<<"?>", Bin/binary>>, [decl|State], Acc) ->
-  parse(Bin, State, Acc);
-
-parse(<<_, Bin/binary>>, [decl|_] = State, Acc) ->
-  parse(Bin, State, Acc);
+skip_declaration(<<"<",_/binary>> = Bin) -> Bin;
+skip_declaration(<<_,Bin/binary>>) -> skip_declaration(Bin).
 
 
-
-parse(<<"</", Bin/binary>>, [tag|State], [Content, Attrs, Tag,Acc1|Acc]) ->
-  Len = size(Tag),
-  <<Tag:Len/binary, ">", Rest/binary>> = Bin,
-  parse(Rest, State, [[{Tag,Attrs,lists:reverse(Content)}|Acc1]|Acc]);
-
-parse(<<"<", Bin/binary>>, [tag|_]=State, Acc) ->
-  parse(Bin, [tag_name|State], [<<>>|Acc]);
-
-parse(<<"\n", Bin/binary>>, [tag|_] = State, Acc) ->
-  parse(Bin, State, Acc);
-
-
-%% Whole text parsing procedure
-parse(<<_, _/binary>> = Bin, [tag|_]=State, [Acc1|Acc]) ->
-  [Text, _] = binary:split(Bin, <<"<">>),
-  Len = size(Text),
-  <<Text:Len/binary, Rest/binary>> = Bin,
-  parse(Rest, State, [[Text|Acc1]|Acc]);
-
-% parse(<<"<", _/binary>> = Bin, [text|State], [Text,Acc1|Acc]) ->
-%   parse(Bin, State, [[Text|Acc1]|Acc]);
-
-% parse(<<C, Bin/binary>>, [text|_] = State, [Text|Acc]) ->
-%   parse(Bin, State, [<<Text/binary,C>>|Acc]);
-
-parse(<<" ", Bin/binary>>, [tag_name|State], Acc) ->
-  parse(Bin, [tag_attr_list|State], [[]|Acc]);
-
-parse(<<">", Bin/binary>>, [tag_attr_list|State], [Attrs, Tag|Acc]) ->
-  parse(Bin, [tag|State], [[],lists:reverse(Attrs),Tag|Acc]);
-
-parse(<<"/>", Bin/binary>>, [tag_attr_list,tag|State], [Attrs,Tag,Acc1|Acc]) ->
-  parse(Bin, [tag|State], [[{Tag,lists:reverse(Attrs),[]}|Acc1]|Acc]);
-
-parse(<<" ",Bin/binary>>, [tag_attr_list|_]=State, Acc) ->
-  parse(Bin, State, Acc);
-
-parse(<<C:1/binary,Bin/binary>>, [tag_attr_list|_]=State, Acc) ->
-  parse(Bin, [tag_attr|State], [C|Acc]);
-
-parse(<<"=", Quote:1/binary ,Bin/binary>>, [tag_attr|State], [Key,List|Acc]) ->
-  [Value, Rest] = binary:split(Bin, Quote),
-  parse(Rest, State, [[{Key,Value}|List]|Acc]);
-  % parse(Bin, [tag_attr_value|State], [<<>>|Acc]);
-
-parse(<<C,Bin/binary>>, [tag_attr|_] = State, [Key|Acc]) ->
-  parse(Bin, State, [<<Key/binary, C>>|Acc]);
-
-% parse(<<"\"", Bin/binary>>, [tag_attr_value|State], [Value, Key, List|Acc]) ->
-%   parse(Bin, State, [[{Key,Value}|List]|Acc]);
-
-% parse(<<C, Bin/binary>>, [tag_attr_value|_]=State, [Value|Acc]) ->
-%   parse(Bin, State, [<<Value/binary,C>>|Acc]);
-
-parse(<<"/>", Bin/binary>>, [tag_name,tag|State], [Tag,Acc1|Acc]) ->
-  parse(Bin, [tag|State], [[{Tag,[],[]}|Acc1]|Acc]);
-
-parse(<<">", Bin/binary>>, [tag_name|State], Acc) ->
-  parse(Bin, [tag|State], [[],[]|Acc]);
-
-
-parse(<<C, Bin/binary>>, [tag_name|_] = State, [Tag|Acc]) ->
-  parse(Bin, State, [<<Tag/binary, C>>|Acc]);
+trim(<<" ",Bin/binary>>) -> trim(Bin);
+trim(<<"\n",Bin/binary>>) -> trim(Bin);
+trim(<<"\t",Bin/binary>>) -> trim(Bin);
+trim(Bin) -> Bin.
 
 
 
 
-parse(<<>>, [tag], [Tag]) ->
-  Tag;
+tag(<<"<", Bin/binary>>) ->
+  [TagHeader1,Rest1] = binary:split(Bin, <<">">>),
+  Len = size(TagHeader1)-1,
 
-parse(<<" ", Bin/binary>>, State, Acc) ->
-  parse(Bin, State, Acc);
+  case TagHeader1 of
+    <<TagHeader:Len/binary, "/">> ->
+      {Tag, Attrs} = tag_header(TagHeader),
+      {{Tag,Attrs,[]}, Rest1};
+    TagHeader ->
+      {Tag, Attrs} = tag_header(TagHeader),
+      {Content, Rest2} = tag_content(Rest1, Tag),
+      {{Tag,Attrs,Content}, Rest2}
+  end.
 
-parse(<<"\n", Bin/binary>>, State, Acc) ->
-  parse(Bin, State, Acc).
+tag_header(TagHeader) ->
+  case binary:split(TagHeader, [<<" ">>]) of
+    [Tag] -> {Tag, []};
+    [Tag,Attrs] -> {Tag, tag_attrs(Attrs)}
+  end.
+
+tag_attrs(<<Blank,Attrs/binary>>)  when Blank == $  orelse Blank == $\n orelse Blank == $\t -> 
+  tag_attrs(Attrs);
+tag_attrs(<<>>) -> [];
+tag_attrs(Attrs) ->
+  case binary:split(Attrs,<<"=">>) of
+    [Key,<<Quote:1/binary,Value1/binary>>] when Quote == <<"\"">> orelse Quote == <<"'">> ->
+      [Value,Rest] = binary:split(Value1,Quote),
+      [{Key,Value}|tag_attrs(Rest)]
+  end.
+
+
+tag_content(<<Blank,Bin/binary>>, Parent) when Blank == $  orelse Blank == $\n orelse Blank == $\t ->
+  tag_content(Bin, Parent);
+
+tag_content(<<"</", Bin1/binary>>, Parent) ->
+  Len = size(Parent),
+  <<Parent:Len/binary, ">", Bin/binary>> = Bin1,
+  {[], Bin};
+
+tag_content(<<"<",_/binary>> = Bin, Parent) ->
+  {Tag, Rest1} = tag(Bin),
+  {Content, Rest2} = tag_content(Rest1, Parent),
+  {[Tag|Content], Rest2};
+
+tag_content(Bin, Parent) ->
+  [Text, Rest] = binary:split(Bin, <<"</",Parent/binary,">">>),
+  {[Text],Rest}.
+
+
+
 

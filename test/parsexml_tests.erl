@@ -8,6 +8,8 @@ parse_test_() ->
   ?_assertEqual({<<"html">>, [], []},
     parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html></html>\n">>))
   ,?_assertEqual({<<"html">>, [], []},
+    parsexml:parse(<<"\n\n\n<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html></html>\n">>))
+  ,?_assertEqual({<<"html">>, [], []},
     parsexml:parse(<<"\n<html></html>\n">>))
   ,?_assertEqual({<<"html">>, [], []},
     parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html ></html>\n">>))
