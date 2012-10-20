@@ -60,17 +60,19 @@ parse(<<" ",Bin/binary>>, [tag_attr_list|_]=State, Acc) ->
 parse(<<C:1/binary,Bin/binary>>, [tag_attr_list|_]=State, Acc) ->
   parse(Bin, [tag_attr|State], [C|Acc]);
 
-parse(<<"=\"",Bin/binary>>, [tag_attr|State], Acc) ->
-  parse(Bin, [tag_attr_value|State], [<<>>|Acc]);
+parse(<<"=\"",Bin/binary>>, [tag_attr|State], [Key,List|Acc]) ->
+  [Value, Rest] = binary:split(Bin, <<"\"">>),
+  parse(Rest, State, [[{Key,Value}|List]|Acc]);
+  % parse(Bin, [tag_attr_value|State], [<<>>|Acc]);
 
 parse(<<C,Bin/binary>>, [tag_attr|_] = State, [Key|Acc]) ->
   parse(Bin, State, [<<Key/binary, C>>|Acc]);
 
-parse(<<"\"", Bin/binary>>, [tag_attr_value|State], [Value, Key, List|Acc]) ->
-  parse(Bin, State, [[{Key,Value}|List]|Acc]);
+% parse(<<"\"", Bin/binary>>, [tag_attr_value|State], [Value, Key, List|Acc]) ->
+%   parse(Bin, State, [[{Key,Value}|List]|Acc]);
 
-parse(<<C, Bin/binary>>, [tag_attr_value|_]=State, [Value|Acc]) ->
-  parse(Bin, State, [<<Value/binary,C>>|Acc]);
+% parse(<<C, Bin/binary>>, [tag_attr_value|_]=State, [Value|Acc]) ->
+%   parse(Bin, State, [<<Value/binary,C>>|Acc]);
 
 parse(<<"/>", Bin/binary>>, [tag_name,tag|State], [Tag,Acc1|Acc]) ->
   parse(Bin, [tag|State], [[{Tag,[],[]}|Acc1]|Acc]);
