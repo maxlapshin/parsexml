@@ -14,10 +14,10 @@ main([]) ->
   spawn(fun() -> loop_xmerl(List, Count), 
     Self ! {ready, xmerl, timer:now_diff(erlang:now(),T0),process_info(self(),memory)} end),
   receive
-    {ready,xmerl,T1,{memory,M1}} -> io:format("   xmerl: ~p ~8.. B~n", [T1,M1])
+    {ready,xmerl,T1,{memory,M1}} -> io:format("   xmerl: ~8.. B ~8.. B~n", [T1,M1])
   end,
   receive
-    {ready,parsexml,T2,{memory,M2}} -> io:format("parsexml: ~p ~8.. B~n", [T2,M2])
+    {ready,parsexml,T2,{memory,M2}} -> io:format("parsexml: ~8.. B ~8.. B~n", [T2,M2])
   end,
   ok.
 
