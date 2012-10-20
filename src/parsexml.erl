@@ -31,14 +31,19 @@ parse(<<"<", Bin/binary>>, [tag|_]=State, Acc) ->
 parse(<<"\n", Bin/binary>>, [tag|_] = State, Acc) ->
   parse(Bin, State, Acc);
 
-parse(<<C:1/binary, Bin/binary>>, [tag|_]=State, Acc) ->
-  parse(Bin, [text|State], [C|Acc]);
 
-parse(<<"<", _/binary>> = Bin, [text|State], [Text,Acc1|Acc]) ->
-  parse(Bin, State, [[Text|Acc1]|Acc]);
+%% Whole text parsing procedure
+parse(<<_, _/binary>> = Bin, [tag|_]=State, [Acc1|Acc]) ->
+  [Text, _] = binary:split(Bin, <<"<">>),
+  Len = size(Text),
+  <<Text:Len/binary, Rest/binary>> = Bin,
+  parse(Rest, State, [[Text|Acc1]|Acc]);
 
-parse(<<C, Bin/binary>>, [text|_] = State, [Text|Acc]) ->
-  parse(Bin, State, [<<Text/binary,C>>|Acc]);
+% parse(<<"<", _/binary>> = Bin, [text|State], [Text,Acc1|Acc]) ->
+%   parse(Bin, State, [[Text|Acc1]|Acc]);
+
+% parse(<<C, Bin/binary>>, [text|_] = State, [Text|Acc]) ->
+%   parse(Bin, State, [<<Text/binary,C>>|Acc]);
 
 parse(<<" ", Bin/binary>>, [tag_name|State], Acc) ->
   parse(Bin, [tag_attr_list|State], [[]|Acc]);
