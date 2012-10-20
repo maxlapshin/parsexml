@@ -12,15 +12,17 @@ main([Path, Count_]) ->
   code:add_pathz("ebin"),
   Self = self(),
   T0 = erlang:now(),
-  spawn(fun() -> loop_parsexml(Bin, Count), 
+  spawn(fun() -> loop_parsexml(Bin, Count),
     Self ! {ready, parsexml, timer:now_diff(erlang:now(),T0),process_info(self(),memory)} end),
   spawn(fun() -> loop_xmerl(List, Count), 
     Self ! {ready, xmerl, timer:now_diff(erlang:now(),T0),process_info(self(),memory)} end),
+
+  Size = Count*size(Bin),
   receive
-    {ready,xmerl,T1,{memory,M1}} -> io:format("   xmerl: ~8.. Bms ~8.. BKB~n", [T1 div 1000,M1 div 1024])
+    {ready,xmerl,T1,{memory,M1}} -> io:format("   xmerl: ~8.. Bms ~8.. BKB ~BMB/s~n", [T1 div 1000,M1 div 1024, Size div T1])
   end,
   receive
-    {ready,parsexml,T2,{memory,M2}} -> io:format("parsexml: ~8.. Bms ~8.. BKB~n", [T2 div 1000,M2 div 1024])
+    {ready,parsexml,T2,{memory,M2}} -> io:format("parsexml: ~8.. Bms ~8.. BKB ~BMB/s~n", [T2 div 1000,M2 div 1024, Size div T2])
   end,
   ok.
 

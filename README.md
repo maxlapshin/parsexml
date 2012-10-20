@@ -2,9 +2,12 @@ ParseXML
 ========
 
 
-It is a very simple and limited XML parser that can work only with valid, well-formed and "good" XML.
+It is a very simple and limited DOM XML parser that can work only with valid, well-formed and "good" XML.
 
-But it is fast enough. Really!
+There are more than hundred ways to crush it down with a proper XML, but it was written for a "good" XML
+to parse feeds and machine-generated content.
+
+It is fast enough  and convenient. Really!
 
 Usage:
 
