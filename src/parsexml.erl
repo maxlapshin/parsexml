@@ -11,7 +11,12 @@ parse(Bin) when is_binary(Bin) ->
 
 skip_declaration(<<"<?xml", Bin/binary>>) ->
   [_,Rest] = binary:split(Bin, <<"?>">>),
-  trim(Rest);
+  trim(Rest),
+  skip_declaration(Rest);
+
+skip_declaration(<<"<!", Bin/binary>>) ->
+	[_,Rest] = binary:split(Bin, <<">">>),
+	trim(Rest);
 
 skip_declaration(<<"<",_/binary>> = Bin) -> Bin;
 skip_declaration(<<_,Bin/binary>>) -> skip_declaration(Bin).

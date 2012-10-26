@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE some_dtd SYSTEM "example.dtd">
 <p:program channel="otv" xmlns:p="http://otv/ns">
 <p:day date="2011-10-19">
 <p:item id="2877" href="http://otv/15/" title="New"/>
