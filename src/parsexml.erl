@@ -25,6 +25,7 @@ skip_declaration(<<_,Bin/binary>>) -> skip_declaration(Bin).
 trim(<<" ",Bin/binary>>) -> trim(Bin);
 trim(<<"\n",Bin/binary>>) -> trim(Bin);
 trim(<<"\t",Bin/binary>>) -> trim(Bin);
+trim(<<"\r",Bin/binary>>) -> trim(Bin);
 trim(Bin) -> Bin.
 
 
@@ -61,7 +62,7 @@ tag_attrs(Attrs) ->
   end.
 
 
-tag_content(<<Blank,Bin/binary>>, Parent) when Blank == $  orelse Blank == $\n orelse Blank == $\t ->
+tag_content(<<Blank,Bin/binary>>, Parent) when Blank == $  orelse Blank == $\n orelse Blank == $\r orelse Blank == $\t ->
   tag_content(Bin, Parent);
 
 tag_content(<<"</", Bin1/binary>>, Parent) ->
