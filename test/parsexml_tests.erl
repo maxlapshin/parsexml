@@ -27,6 +27,8 @@ parse_test_() ->
     parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html k=\"v\"/>\n">>))
   ,?_assertEqual({<<"html">>, [{<<"k">>,<<"v">>}], []}, 
     parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html k=\"v\" />\n">>))
+  ,?_assertEqual({<<"html">>, [{<<"k">>,<<"v">>}], []}, 
+    parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html k=\"v\" />\r\n">>))
   ,?_assertEqual({<<"html">>, [{<<"k">>,<<"v">>}], []},
     parsexml:parse(<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE some_dtd SYSTEM \"example.dtd\">\n<html k=\"v\" />\n">>))
   ].
