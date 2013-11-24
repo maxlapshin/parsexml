@@ -23,7 +23,6 @@ skip_declaration(<<_,Bin/binary>>) -> skip_declaration(Bin).
 
 
 trim(<<" ",Bin/binary>>) -> trim(Bin);
-trim(<<"\r",Bin/binary>>) -> trim(Bin);
 trim(<<"\n",Bin/binary>>) -> trim(Bin);
 trim(<<"\t",Bin/binary>>) -> trim(Bin);
 trim(<<"\r",Bin/binary>>) -> trim(Bin);
