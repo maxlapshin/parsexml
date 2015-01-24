@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Unified Streaming Platform(version=1.6.6) -->
+<MPD
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:mpeg:dash:schema:mpd:2011"
+  xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 http://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-DASH_schema_files/DASH-MPD.xsd"
+  type="dynamic"
+  availabilityStartTime="1970-01-01T00:10:02.442394Z"
+  publishTime="2015-01-24T13:11:42.373483Z"
+  minimumUpdatePeriod="PT2S"
+  timeShiftBufferDepth="PT10M"
+  maxSegmentDuration="PT3S"
+  minBufferTime="PT10S"
+  profiles="urn:mpeg:dash:profile:isoff-live:2011,urn:com:dashif:dash264">
+  <Period
+    id="1"
+    start="PT0S">
+    <BaseURL>dash/</BaseURL>
+    <AdaptationSet
+      group="1"
+      mimeType="audio/mp4"
+      minBandwidth="151952"
+      maxBandwidth="151952"
+      segmentAlignment="true">
+      <SegmentTemplate
+        timescale="44100"
+        initialization="channel2-$RepresentationID$.dash"
+        media="channel2-$RepresentationID$-$Time$.dash"
+        startNumber="1">
+        <SegmentTimeline>
+          <S t="62714808446961" d="88064" r="2" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="1" />
+          <S d="91136" />
+          <S t="62714813786100" d="84993" />
+          <S d="88064" r="1" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89087" />
+          <S d="88064" r="6" />
+          <S d="89089" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="1" />
+          <S d="91136" />
+          <S t="62714824546500" d="84993" />
+          <S d="88064" r="1" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89087" />
+          <S d="88064" r="6" />
+          <S d="89089" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" r="5" />
+          <S d="89088" />
+          <S d="88064" r="6" />
+          <S d="89088" />
+          <S d="88064" />
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation
+        id="audio=151952"
+        bandwidth="151952"
+        codecs="mp4a.40.2"
+        audioSamplingRate="44100">
+        <AudioChannelConfiguration
+          schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011"
+          value="2">
+        </AudioChannelConfiguration>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet
+      group="2"
+      mimeType="video/mp4"
+      par="16:9"
+      minBandwidth="374630"
+      maxBandwidth="2509855"
+      minWidth="320"
+      maxWidth="1280"
+      minHeight="180"
+      maxHeight="720"
+      segmentAlignment="true"
+      startWithSAP="1">
+      <SegmentTemplate
+        timescale="1000"
+        initialization="channel2-$RepresentationID$.dash"
+        media="channel2-$RepresentationID$-$Time$.dash"
+        startNumber="1">
+        <SegmentTimeline>
+          <S t="1422104498000" d="2000" r="60" />
+          <S t="1422104621000" d="2000" r="120" />
+          <S t="1422104865000" d="2000" r="117" />
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation
+        id="video=374630"
+        bandwidth="374630"
+        codecs="avc1.64000C"
+        width="320"
+        height="180">
+      </Representation>
+      <Representation
+        id="video=698901"
+        bandwidth="698901"
+        codecs="avc1.640015"
+        width="480"
+        height="270">
+      </Representation>
+      <Representation
+        id="video=1296686"
+        bandwidth="1296686"
+        codecs="avc1.64001E"
+        width="800"
+        height="450">
+      </Representation>
+      <Representation
+        id="video=1496409"
+        bandwidth="1496409"
+        codecs="avc1.64001F"
+        width="960"
+        height="540">
+      </Representation>
+      <Representation
+        id="video=2509855"
+        bandwidth="2509855"
+        codecs="avc1.640020"
+        width="1280"
+        height="720">
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

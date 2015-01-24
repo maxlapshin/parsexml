@@ -46,7 +46,7 @@ tag(<<"<", Bin/binary>>) ->
   end.
 
 tag_header(TagHeader) ->
-  case binary:split(TagHeader, [<<" ">>]) of
+  case binary:split(TagHeader, [<<" ">>, <<"\n">>, <<"\t">>, <<"\r">>]) of
     [Tag] -> {Tag, []};
     [Tag,Attrs] -> {Tag, tag_attrs(Attrs)}
   end.
@@ -67,7 +67,9 @@ tag_content(<<Blank,Bin/binary>>, Parent) when Blank == $  orelse Blank == $\n o
 
 tag_content(<<"</", Bin1/binary>>, Parent) ->
   Len = size(Parent),
-  <<Parent:Len/binary, ">", Bin/binary>> = Bin1,
+  % <<Parent:Len/binary, ">", Bin/binary>> = Bin1,
+  <<Parent:Len/binary, Bin2/binary>> = Bin1,
+  <<">", Bin/binary>> = trim(Bin2),
   {[], Bin};
 
 tag_content(<<"<",_/binary>> = Bin, Parent) ->
