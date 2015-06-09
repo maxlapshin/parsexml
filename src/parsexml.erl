@@ -51,18 +51,18 @@ tag_header(TagHeader) ->
     [Tag,Attrs] -> {Tag, tag_attrs(Attrs)}
   end.
 
-tag_attrs(<<Blank,Attrs/binary>>)  when Blank == $  orelse Blank == $\n orelse Blank == $\t -> 
+tag_attrs(<<Blank,Attrs/binary>>)  when Blank =:= $ ; Blank =:= $\n; Blank =:= $\t -> 
   tag_attrs(Attrs);
 tag_attrs(<<>>) -> [];
 tag_attrs(Attrs) ->
   case binary:split(Attrs,<<"=">>) of
-    [Key,<<Quote:1/binary,Value1/binary>>] when Quote == <<"\"">> orelse Quote == <<"'">> ->
+    [Key,<<Quote:1/binary,Value1/binary>>] when Quote =:= <<"\"">>; Quote =:= <<"'">> ->
       [Value,Rest] = binary:split(Value1,Quote),
       [{Key,Value}|tag_attrs(Rest)]
   end.
 
 
-tag_content(<<Blank,Bin/binary>>, Parent) when Blank == $  orelse Blank == $\n orelse Blank == $\r orelse Blank == $\t ->
+tag_content(<<Blank,Bin/binary>>, Parent) when Blank =:= $ ; Blank =:= $\n; Blank =:= $\r; Blank =:= $\t ->
   tag_content(Bin, Parent);
 
 tag_content(<<"</", Bin1/binary>>, Parent) ->
