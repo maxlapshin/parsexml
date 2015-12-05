@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created with Unified Streaming Platform(version=1.6.6) -->
+<!-- more comments -->
 <MPD
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="urn:mpeg:dash:schema:mpd:2011"
@@ -12,6 +13,7 @@
   maxSegmentDuration="PT3S"
   minBufferTime="PT10S"
   profiles="urn:mpeg:dash:profile:isoff-live:2011,urn:com:dashif:dash264">
+  <!-- some nice comments -->
   <Period
     id="1"
     start="PT0S">
@@ -179,6 +181,9 @@
         width="960"
         height="540">
       </Representation>
+      <!-- some long 
+           comments 
+       -->
       <Representation
         id="video=2509855"
         bandwidth="2509855"
