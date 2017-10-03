@@ -7,7 +7,8 @@ clean:
 .PHONY: test
 
 test:
-	./rebar eunit skip_deps=true
+	mkdir -p logs
+	ct_run -pa ebin -logdir logs/ -dir test
 
 bench:
 	./rebar compile skip_deps=true
