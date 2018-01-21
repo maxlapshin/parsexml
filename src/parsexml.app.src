@@ -2,9 +2,9 @@
  [
   {description, "Simple DOM XML parser with convenient and very simple API"},
   {licenses, ["3-clause BSD"]},
-  {links, [{"Github", "https://github.com/maxlapshin/parsexml"}]},
+  {links, [{"GitHub", "https://github.com/maxlapshin/parsexml"}]},
   {maintainers, ["Max Lapshin"]},
-  {vsn, "1.0.0"},
+  {vsn, "1.1.0"},
   {registered, []},
   {applications, [
                   kernel,
